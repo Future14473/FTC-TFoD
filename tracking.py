@@ -83,13 +83,13 @@ WINDOW_SCALE = 0.5
 # Make a bunch of trackers because I don't trust the opencv one
 tracker_fns = [
     cv2.TrackerKCF_create,
-    cv2.TrackerBoosting_create,
+    # cv2.TrackerBoosting_create,
     cv2.TrackerCSRT_create,
     cv2.TrackerGOTURN_create,
     cv2.TrackerMIL_create,
-    cv2.TrackerMOSSE_create,
-    cv2.TrackerMedianFlow_create,
-    cv2.TrackerTLD_create,
+    # cv2.TrackerMOSSE_create,
+    # cv2.TrackerMedianFlow_create,
+    # cv2.TrackerTLD_create,
 ]
 
 
