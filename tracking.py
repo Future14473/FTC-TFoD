@@ -82,11 +82,11 @@ WINDOW_SCALE = 0.5
 
 # Make a bunch of trackers because I don't trust the opencv one
 tracker_fns = [
-    cv2.TrackerKCF_create,
+    # cv2.TrackerKCF_create,
     # cv2.TrackerBoosting_create,
-    cv2.TrackerCSRT_create,
-    cv2.TrackerGOTURN_create,
-    cv2.TrackerMIL_create,
+    # cv2.TrackerCSRT_create,
+    # cv2.TrackerGOTURN_create,
+    # cv2.TrackerMIL_create,
     # cv2.TrackerMOSSE_create,
     # cv2.TrackerMedianFlow_create,
     # cv2.TrackerTLD_create,
@@ -114,7 +114,7 @@ def open_vid(path):
         sys.exit()
     return vid
 
-
+# current error
 def verify_bboxes(frame, bboxes, classes, yes):
     frame_to_draw = frame.copy()
     drawing_utils.draw_bboxes(frame_to_draw, bboxes, classes, args.scale)
@@ -134,10 +134,13 @@ def verify_bboxes(frame, bboxes, classes, yes):
 
 def init_trackers(tracker_index, frame, bboxes):
     trackers = []
-    tracker_fn = tracker_fns[tracker_index]
+    tracker_fn = cv2.legacy.TrackerMIL_create
+    # tracker_fn = cv2.TrackerCSRT_create
+    # tracker_fn = tracker_fns[tracker_index]
 
     for i, bbox in enumerate(bboxes):
         tracker = tracker_fn()
+        # ret = tracker.init(frame, tuple(bbox))
         ret = tracker.init(frame, tuple(bbox))
         if not ret:
             print("Unable to initialize tracker", i)
@@ -269,12 +272,14 @@ if __name__ == "__main__":
     verify_bboxes(frame, bboxes, classes, args.yes)
 
     tracker_index = args.tracker
-    tracker_fn = tracker_fns[tracker_index]
+    # tracker_fn = tracker_fns[tracker_index]
+    tracker_fn = cv2.legacy.TrackerMIL_create
     tracker_name = tracker_fn.__name__.split("_")[0]
 
     trackers = init_trackers(tracker_index, frame, bboxes)
 
-    # Initialize video now that we're sure we want to try to track.
+    # Initialize video now that we're sure we want
+    # to try to track.
     filename = os.path.splitext(os.path.basename(args.filename.name))[0]
     run_name = "%s_%s_%f" % (filename, tracker_name, args.scale)
     run_path = os.path.join(os.path.dirname(args.filename.name), run_name)
